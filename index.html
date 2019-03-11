@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="description" content="">
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+	<!-- Babel for on the fly JSX/React Transpilation https://github.com/babel/babel-standalone#usage -->
+	<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+	<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+	<!-- https://cdnjs.com/libraries/ace/ -->
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/ace.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/mode-jsx.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/theme-twilight.js"></script>
+</head>
+<body>
+
+<style>
+#econt {
+	height: 300px;
+	width: 100%;
+	position: relative;
+}
+#editor {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+#codeCont {
+	position: relative;
+	height: 400px;
+	width: 100%;
+}
+#code {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+</style>
+<div id="codeCont">
+	<div id="code">
+
+	</div>
+</div>
+
+<button onclick="loadCode()">Submit</button>
+
+<div id="main"></div>
+
+<script>
+var editor = ace.edit("code");
+editor.setTheme("ace/theme/twilight");
+editor.session.setMode("ace/mode/javascript");
+editor.setValue(`
+let josh = {
+	name: "Joshua S. Harris",
+	email: "joshua40harris@gmail.com",
+	phone: "(678) 920-8233",
+	tagline: "Finding simple solutions to create customer value",
+
+	education: {
+		school: "Georgia Tech",
+		graduation: "May 2014",
+		degree: "Computer Science BS (Specialization in Networking and Media)"
+	},
+
+	work: [{
+		name: "Fullstory",
+		start: "May 2018",
+		end: "current",
+		role: "Software Engineer"
+	}, {
+		name: "Salesforce Pardot",
+		start: "July 2014",
+		end: "May 2018",
+		role: "Software Engineer"
+	}],
+
+	experience: [{
+		title: "Salesforce Engage",
+		company: "Salesforce Pardot",
+		desc: "Built a system that gave sales users information about what activities their leads were engaging in with their digital assets (email opens and clicks, page views, etc.).  The information would publish to their Salesforce1 mobile app and our Web interface to give them real time alerts when leads were active."
+	}, {
+		title: "Multiplicity",
+		company: "Salesforce Pardot",
+		desc: "We reworked major sections of our codebase to ensure that all previous contraints assuming that email addresses represented one and only one user were replaced, so that we could handle multiple records per 'user'.  Allowing multiple records would give us the ability to separate activities for different business units selling to the same customer."
+	}, {
+		title: "",
+		company: "Salesforce Pardot",
+		desc: "We reworked major sections of our codebase to ensure that all previous contraints assuming that email addresses represented one and only one user were replaced, so that we could handle multiple records per 'user'.  Allowing multiple records would give us the ability to separate activities for different business units selling to the same customer."
+	}],
+
+	technologies: [{
+
+	}]
+};
+
+class JSXResume extends React.Component {
+  render () {
+    return (<div>Blah</div>);
+  }
+}
+
+ReactDOM.render(<JSXResume/>, document.getElementById("main"));
+`);
+
+
+loadCode();
+
+function loadCode() {
+	execJsxResume(editor.getValue());
+}
+
+function execJsxResume(resumeCode) {
+	eval(Babel.transform(resumeCode, {
+		presets: ['es2015', 'react']
+	}).code);
+}
+</script>
+
+</body>
+</html>
