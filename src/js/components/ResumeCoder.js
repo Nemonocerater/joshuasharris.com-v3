@@ -1,43 +1,69 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-	<meta name="description" content="">
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-	<link rel="stylesheet" href="main.css" />
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Switch, Route } from 'react-router-dom';
 
-	<!-- Babel for on the fly JSX/React Transpilation https://github.com/babel/babel-standalone#usage -->
-	<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
-	<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-	<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+import { transform as babelTransform } from 'babel-standalone';
+import ace from 'brace';
+import 'brace/mode/javascript';
+import 'brace/theme/twilight';
 
-	<!-- https://cdnjs.com/libraries/ace/ -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/ace.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/mode-jsx.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/theme-twilight.js"></script>
-</head>
-<body>
+export default class ResumeCoder extends React.Component {
+  constructor() {
+    super();
+    this.loadAttempts = 0;
+    this.loadCode = this.loadCode.bind(this);
+  }
 
-<div id="flexContainer">
-	<div id="codeCont">
-		<div id="code">
-		</div>
-	</div>
+  componentDidMount() {
+    // Need these for JSX/React compilation on the Browser
+    window.React = React;
+    window.ReactDOM = ReactDOM;
 
-	<div id="codeButton"></div>
+    var editor = ace.edit("code");
+    editor.setTheme("ace/theme/twilight");
+    editor.session.setMode("ace/mode/javascript");
+    editor.session.setOption("useWorker", false);
 
-	<div id="mainCont">
-		<div id="main">
-		</div>
-	</div>
-</div>
+    editor.setValue(this.getResumeCode());
+  	this.loadCode();
+  	editor.session.on('change', this.loadCode);
 
-<script>
-var editor = ace.edit("code");
-editor.setTheme("ace/theme/twilight");
-editor.session.setMode("ace/mode/javascript");
-editor.session.setOption("useWorker", false);
-editor.setValue(`
+    this.editor = editor;
+  }
+
+  loadCode() {
+    this.loadAttempts++;
+    setTimeout(() => {
+      this.loadAttempts--;
+      if (this.loadAttempts === 0) {
+        // TODO: Lol, fix this security nightmare before putting anything secure on the site.
+        eval(babelTransform(this.editor.getValue(), {
+          presets: ['es2015', 'react']
+        }).code);
+      }
+    }, 100);
+  }
+
+	render() {
+		return (
+      <div id="flexContainer">
+      	<div id="codeCont">
+      		<div id="code">
+      		</div>
+      	</div>
+
+      	<div id="codeButton"></div>
+
+      	<div id="mainCont">
+      		<div id="main">
+      		</div>
+      	</div>
+      </div>
+		);
+	}
+
+  getResumeCode() {
+    return `
 /*
  *************************************************
  *
@@ -250,30 +276,6 @@ ReactDOM.render(
 	<JSXResume person={josh} />,
 	document.getElementById("main")
 );
-`);
-
-let loadAttempts = 0;
-function loadCode() {
-	loadAttempts++;
-	setTimeout(function () {
-		loadAttempts--;
-		if (loadAttempts === 0) {
-			execJsxResume(editor.getValue());
-		}
-	}, 100);
+`;
+  }
 }
-
-function execJsxResume(resumeCode) {
-	eval(Babel.transform(resumeCode, {
-		presets: ['es2015', 'react']
-	}).code);
-}
-
-(function main() {
-	loadCode();
-	editor.session.on('change', loadCode);
-})();
-</script>
-
-</body>
-</html>
