@@ -1,0 +1,71 @@
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+#flexContainer {
+  position: relative;
+  display: flex;
+  height: 100%;
+}
+
+#codeButton {
+  display: none;
+  padding: 10px;
+  background: black;
+  color: white;
+  cursor: pointer;
+}
+
+#codeButton::after {
+  content: ">>";
+}
+
+#codeCont {
+	position: relative;
+	height: 100%;
+	width: 50%;
+}
+
+#code {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+
+#mainCont {
+  flex: 1;
+  padding: 15px;
+  max-width: 50%;
+  max-height: 100%;
+  overflow: scroll;
+}
+
+@media only screen and (max-width: 800px) {
+  #flexContainer {
+    display: flex;
+  }
+
+  #codeButton {
+    display: block;
+    -position: absolute;
+    -top: 20px;
+    -left: 0;
+  }
+
+  #codeCont, #code {
+    display: none;
+  }
+
+  #mainCont {
+    max-width: 100%;
+    max-height: none;
+  }
+}
