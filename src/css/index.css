@@ -4,32 +4,32 @@
   padding: 0;
 }
 
-html, body, #myapp {
+html, body {
   height: 100%;
 }
 
-#flexContainer {
-  position: relative;
+
+#resumeConainer > * {
+  width: 100%;
+  height: 100%;
+}
+
+#editorContainer {
+  position: fixed;
   display: flex;
+  left: calc(100% - 50px);
+  width: 100%;
   height: 100%;
-}
 
-#codeButton {
-  display: none;
-  padding: 10px;
   background: black;
   color: white;
-  cursor: pointer;
-}
-
-#codeButton::after {
-  content: ">>";
 }
 
 #codeCont {
 	position: relative;
 	height: 100%;
-	width: 50%;
+	-width: 600px;
+  flex: 1;
 }
 
 #code {
@@ -40,32 +40,21 @@ html, body, #myapp {
 	bottom: 0;
 }
 
-#mainCont {
-  flex: 1;
-  padding: 15px;
-  max-width: 50%;
-  max-height: 100%;
-  overflow: scroll;
+#editorButton {
+  width: 50px;
+  height: 100%;
+  text-align: center;
 }
 
+#editorButton .text {
+  display: inline-block;
+  font-size: 25px;
+  writing-mode: vertical-rl;
+  text-align: center;
+  height: 100%;
+}
+
+
+
 @media only screen and (max-width: 800px) {
-  #flexContainer {
-    display: flex;
-  }
-
-  #codeButton {
-    display: block;
-    -position: absolute;
-    -top: 20px;
-    -left: 0;
-  }
-
-  #codeCont, #code {
-    display: none;
-  }
-
-  #mainCont {
-    max-width: 100%;
-    max-height: none;
-  }
 }

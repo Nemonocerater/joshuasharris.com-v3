@@ -12,6 +12,7 @@ export default class ResumeCoder extends React.Component {
     super();
     this.loadAttempts = 0;
     this.loadCode = this.loadCode.bind(this);
+    this.clickCodeButton = this.clickCodeButton.bind(this);
   }
 
   componentDidMount() {
@@ -19,16 +20,23 @@ export default class ResumeCoder extends React.Component {
     window.React = React;
     window.ReactDOM = ReactDOM;
 
-    var editor = ace.edit("code");
-    editor.setTheme("ace/theme/twilight");
-    editor.session.setMode("ace/mode/javascript");
-    editor.session.setOption("useWorker", false);
+    this.setupEditorAndLoadCode();
+  }
 
-    editor.setValue(this.getResumeCode());
-  	this.loadCode();
-  	editor.session.on('change', this.loadCode);
+  setupEditorAndLoadCode() {
+    if (!this.editor) {
+      var editor = ace.edit("code");
+      editor.setTheme("ace/theme/twilight");
+      editor.session.setMode("ace/mode/javascript");
+      editor.session.setOption("useWorker", false);
 
-    this.editor = editor;
+      // TODO change this order to just load through the flow once
+      editor.setValue(this.getResumeCode());
+      this.loadCode();
+      editor.session.on('change', this.loadCode);
+
+      this.editor = editor;
+    }
   }
 
   loadCode() {
@@ -44,22 +52,28 @@ export default class ResumeCoder extends React.Component {
     }, 100);
   }
 
+  clickCodeButton() {
+    console.log("code button");
+  }
+
 	render() {
-		return (
-      <div id="flexContainer">
-      	<div id="codeCont">
-      		<div id="code">
-      		</div>
-      	</div>
-
-      	<div id="codeButton"></div>
-
-      	<div id="mainCont">
-      		<div id="main">
-      		</div>
-      	</div>
+    return (
+      <div id="resumeContainer">
+        <div id="editorContainer">
+          <div id="editorButton" onClick={this.clickCodeButton}>
+            <div class="text">
+              -- Code --
+            </div>
+          </div>
+          <div id="codeCont">
+            <div id="code"></div>
+          </div>
+        </div>
+        <div id="outputContainer">
+          <div id="main"></div>
+        </div>
       </div>
-		);
+    );
 	}
 
   getResumeCode() {
